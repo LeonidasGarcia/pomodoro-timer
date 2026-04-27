@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+:root {
+  --tomato-color: #ff6347;
+  --leaf-color: #2e8b57;
+}
+
+.tomato-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  width: 600px;
+  height: 520px;
+  background-color: var(--tomato-color);
+  border-radius: 50% 50% 45% 45%;
+  margin: 50px auto;
+  box-shadow:
+    inset -10px -10px 20px rgba(0, 0, 0, 0.1),
+    0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tomato-container::before {
+  content: "";
+  position: absolute;
+  top: -5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24%;
+  height: 12%;
+  background-color: var(--leaf-color);
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  z-index: 2;
+}
+
+.tomato-container::after {
+  content: "";
+  position: absolute;
+  top: 17%;
+  left: 17%;
+  width: 20%;
+  height: 15%;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: rotate(-25deg);
+}
