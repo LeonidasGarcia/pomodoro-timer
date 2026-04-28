@@ -6,7 +6,7 @@
 
 import type TimeUnits from "../types/TimeUnits";
 
-export function timeConverter(ms: number): TimeUnits {
+export function convertTime(ms: number): TimeUnits {
   const minutes = Math.floor(ms / 60000);
   const seconds = Math.floor((ms - minutes * 60000) / 1000);
 
@@ -23,7 +23,7 @@ export function timeConverter(ms: number): TimeUnits {
   };
 }
 
-export function timeFormatter({ minutes, seconds }: TimeUnits) {
+export function formatTime({ minutes, seconds }: TimeUnits) {
   return {
     minutes: minutes < 10 ? `0${minutes}` : "" + minutes,
     seconds: seconds < 10 ? `0${seconds}` : "" + seconds,

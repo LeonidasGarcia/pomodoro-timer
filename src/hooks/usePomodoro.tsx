@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { act, useEffect, useReducer, useState } from "react";
 import type { PomodoroConfig, PomodoroCycle } from "../types/Pomodoro";
 import { createPomodoro } from "../lib/pomodoro";
 import useTimer from "./useTimer";
@@ -7,45 +7,69 @@ import type TimeUnits from "../types/TimeUnits";
 
 interface PomodoroData {
   count: TimeUnits;
-  isEnded: boolean;
   currentCycle: PomodoroCycle;
 }
 
-export default function usePomodoro(config: PomodoroConfig): PomodoroData {
-  const [cycles, setCycles] = useState(createPomodoro(config));
-  const [isEnded, setIsEnded] = useState(false);
+interface Action {
+  type: "updateCycle";
+  index?: number;
+  cycleProps: Partial<PomodoroCycle>;
+}
+
+function reducer(state: PomodoroCycle[], action: Action) {
+  switch (action.type) {
+    case "updateCycle": {
+      const selectedCycle = state[action.index]!;
+
+      const updatedCycle: PomodoroCycle = {
+        ...selectedCycle,
+        ...action.cycleProps,
+      };
+
+      const newCycles = [...state];
+      newCycles[action.index] = updatedCycle;
+
+      return newCycles;
+    }
+  }
+}
+
+export default function usePomodoro(
+  config: PomodoroConfig,
+  delayTime: number = 3000,
+): PomodoroData {
+  const [cycles, dispatch] = useReducer(reducer, createPomodoro(config));
   const [cycleIndex, setCycleIndex] = useState(0);
-  const { count, start, reset } = useTimer(cycles[cycleIndex].time);
+  const { count } = useTimer(cycles[cycleIndex].time);
 
   const currentCycle = cycles[cycleIndex];
 
   useEffect(() => {
-    if (!currentCycle.isCompleted) {
-      reset();
-      setTimeout(() => {
-        start(currentCycle.time);
-      }, 1000);
-    }
-  }, [cycleIndex]);
-
-  useEffect(() => {
-    if (isZero(count)) {
-      const updatedCycle: PomodoroCycle = {
-        ...currentCycle,
+    if (!isZero(count)) return;
+    dispatch({
+      type: "updateCycle",
+      index: cycleIndex,
+      cycleProps: {
         isCompleted: true,
-      };
-      const updatedCycles = [...cycles];
-      updatedCycle[cycleIndex] = updatedCycle;
-
-      setCycles(updatedCycles);
-
-      if (cycleIndex < cycles.length - 1) {
-        setCycleIndex((c) => c + 1);
-      } else {
-        setIsEnded(true);
-      }
-    }
+      },
+    });
   }, [count]);
 
-  return { count, isEnded, currentCycle };
+  useEffect(() => {
+    if (!isZero(count)) return;
+
+    let timeoutId = 0;
+
+    if (cycleIndex + 1 < cycles.length) {
+      timeoutId = setTimeout(() => {
+        setCycleIndex((c) => c + 1);
+      }, delayTime);
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [count]);
+
+  return { count, currentCycle };
 }

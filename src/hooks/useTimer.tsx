@@ -1,13 +1,13 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type TimeUnits from "../types/TimeUnits";
-import { timeConverter } from "../lib/time";
+import { convertTime } from "../lib/time";
 
 interface Timer {
   count: TimeUnits;
-  start: (ms: number) => void;
-  pause: () => void;
-  resume: () => void;
-  reset: () => void;
+  start?: (ms: number) => void;
+  pause?: () => void;
+  resume?: () => void;
+  reset?: () => void;
 }
 
 /**
@@ -17,59 +17,27 @@ interface Timer {
  */
 export default function useTimer(startTime: number): Timer {
   const [count, setCount] = useState(startTime);
-  const intervalRef = useRef(null);
 
-  function handleStart(ms: number) {
-    clearInterval(intervalRef.current);
+  useEffect(() => {
+    setCount(() => startTime);
 
-    setCount(ms);
-
-    intervalRef.current = setInterval(() => {
+    const id = setInterval(() => {
       setCount((c) => {
-        if (c > 0) {
+        if (c - 1000 > 0) {
           return c - 1000;
         } else {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
+          clearInterval(id);
           return 0;
         }
       });
     }, 1000);
-  }
 
-  function handlePause() {
-    if (!intervalRef.current) return;
-
-    clearInterval(intervalRef.current);
-    intervalRef.current = null;
-  }
-
-  function handleResumen() {
-    if (intervalRef.current) return;
-
-    intervalRef.current = setInterval(() => {
-      if (count > 0) {
-        setCount((c) => c - 1000);
-      } else {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    }, 1000);
-  }
-
-  function handleReset() {
-    if (!intervalRef.current) return;
-
-    clearInterval(intervalRef.current);
-    intervalRef.current = null;
-    setCount(0);
-  }
+    return () => {
+      clearInterval(id);
+    };
+  }, [startTime]);
 
   return {
-    count: timeConverter(count),
-    start: handleStart,
-    pause: handlePause,
-    resume: handleResumen,
-    reset: handleReset,
+    count: convertTime(count),
   };
 }
