@@ -14,25 +14,25 @@ export function createPomodoro(config: PomodoroConfig) {
   for (let i = 0; i < 3; i++) {
     cycles.push({
       time: config.pomodoro,
-      label: "pomodoro",
+      label: "Pomodoro",
       isCompleted: false,
     });
     cycles.push({
       time: config.shortBreak,
-      label: "shortBreak",
+      label: "Short Break",
       isCompleted: false,
     });
   }
 
   cycles.push({
     time: config.pomodoro,
-    label: "pomodoro",
+    label: "Pomodoro",
     isCompleted: false,
   });
 
   cycles.push({
     time: config.longBreak,
-    label: "longBreak",
+    label: "Long Break",
     isCompleted: false,
   });
 

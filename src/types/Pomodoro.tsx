@@ -6,6 +6,6 @@ export interface PomodoroConfig {
 
 export interface PomodoroCycle {
   time: number;
-  label: "pomodoro" | "shortBreak" | "longBreak";
+  label: "Pomodoro" | "Short Break" | "Long Break";
   isCompleted: boolean;
 }
