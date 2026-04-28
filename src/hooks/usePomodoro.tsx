@@ -1,4 +1,4 @@
-import { act, useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import type { PomodoroConfig, PomodoroCycle } from "../types/Pomodoro";
 import { createPomodoro } from "../lib/pomodoro";
 import useTimer from "./useTimer";

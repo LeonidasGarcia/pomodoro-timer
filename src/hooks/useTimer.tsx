@@ -1,13 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type TimeUnits from "../types/TimeUnits";
 import { convertTime } from "../lib/time";
 
 interface Timer {
   count: TimeUnits;
-  start?: (ms: number) => void;
-  pause?: () => void;
-  resume?: () => void;
-  reset?: () => void;
 }
 
 /**
