@@ -1,75 +1,42 @@
-# React + TypeScript + Vite
+Tambien corri# Pomodoro Timer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicacion web de temporizador Pomodoro construida con React + TypeScript + Vite.
 
-Currently, two official plugins are available:
+## Que hace hoy el proyecto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Ejecuta una secuencia completa de Pomodoro con descansos cortos y un descanso largo final.
+- Muestra el ciclo actual (`pomodoro`, `shortBreak`, `longBreak`).
+- Realiza cuenta regresiva en pasos de 1 segundo y la muestra en formato `mm:ss`.
+- Marca cada ciclo como completado al llegar a `00:00`.
+- Avanza automaticamente al siguiente ciclo despues de una espera configurable.
 
-## React Compiler
+## Logica principal
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+El flujo de ejecucion esta concentrado en cuatro piezas:
 
-Note: This will impact Vite dev & build performances.
+- `src/hooks/usePomodoro.tsx`
+  - Orquesta el estado de los ciclos.
+  - Usa un `reducer` para actualizar el ciclo activo.
+  - Detecta cuando el contador llega a cero y cambia de ciclo.
+- `src/hooks/useTimer.tsx`
+  - Maneja la cuenta regresiva con `setInterval`.
+  - Reinicia el contador cuando cambia el tiempo inicial.
+- `src/lib/pomodoro.ts`
+  - Genera la secuencia de ciclos a partir de la configuracion.
+  - Estructura actual: 4 pomodoros, 3 descansos cortos y 1 descanso largo.
+- `src/lib/time.ts`
+  - Convierte milisegundos a minutos/segundos.
+  - Formatea el tiempo con ceros a la izquierda.
+  - Expone la utilidad para validar `00:00`.
 
-## Expanding the ESLint configuration
+## Modelo de tiempo
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Todas las duraciones se modelan en milisegundos.
+- La configuracion de tiempos se pasa como `PomodoroConfig`.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Scripts disponibles
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- `npm run dev` - inicia el servidor de desarrollo.
+- `npm run lint` - ejecuta ESLint.
+- `npm run build` - ejecuta `tsc -b` y luego el build de Vite.
+- `npm run preview` - previsualiza el build de produccion.
