@@ -7,9 +7,13 @@ interface Timer {
 }
 
 /**
- * Hook para crear un temporizador.
- * * @param startTime - Tiempo en milisegundos en donde se desea inciar la cuenta hacia atrás
- * @returns unidades de tiempo - Las unidades de tiempo en cada tick, del tipo TimeUnits
+ * Ejecuta una cuenta regresiva en pasos de 1 segundo.
+ *
+ * Reinicia el contador cada vez que cambia `startTime` y expone
+ * el valor actual convertido a `{ minutes, seconds }`.
+ *
+ * @param startTime Tiempo inicial en milisegundos.
+ * @returns Objeto con la cuenta actual en unidades de tiempo.
  */
 export default function useTimer(startTime: number): Timer {
   const [count, setCount] = useState(startTime);

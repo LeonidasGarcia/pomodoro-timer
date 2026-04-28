@@ -34,6 +34,17 @@ function reducer(state: PomodoroCycle[], action: Action) {
   }
 }
 
+/**
+ * Orquesta un ciclo completo de Pomodoro y su progreso.
+ *
+ * Usa `createPomodoro` para generar la secuencia de ciclos,
+ * `useTimer` para la cuenta regresiva del ciclo activo y cambia
+ * automáticamente al siguiente ciclo cuando el actual llega a cero.
+ *
+ * @param config Duraciones del pomodoro y descansos en milisegundos.
+ * @param delayTime Espera en ms antes de avanzar al siguiente ciclo.
+ * @returns Estado actual del temporizador y del ciclo activo.
+ */
 export default function usePomodoro(
   config: PomodoroConfig,
   delayTime: number = 3000,
